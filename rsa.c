@@ -1,16 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
-long p;
-long q;
-long long phi;
-long long n;
+double time_spent;
+unsigned long C;
+unsigned long M;
+unsigned int p;
+unsigned int q;
+unsigned long phi;
+unsigned long n;
 long e;
-long long d;
-long long m;
+long d;
+long m;
 
-int mul_inv(long long a, long long b){
+// Need to fix these...
+int ebin[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+int elength = sizeof(ebin)/sizeof(ebin[0]);
+int dbin[] = {1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1};
+int dlength = sizeof(dbin)/sizeof(dbin[0]);
+
+
+long long mul_inv(long long a, long long b){
 	long long b0 = b, t, q;
 	long long x0 = 0, x1 = 1;
 	if (b == 1) return 1;
@@ -28,40 +39,41 @@ long gcd(long long a, long long b){
   return gcd (b%a, a);
 }
 
-long long modPow(long long base, long long exp, long long mod){
-	long long c = 1;
-	for (long long i = 0; i < exp; ++i){
+unsigned long binaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
+	unsigned long long c = (binary[0]==1) ? base : 1;
+	for (int i = 1; i < length; ++i){
+		c = (c*c) % mod;
+		if(binary[i]==1) c = (c*base)%mod;
+	}
+	return c;
+}
+
+unsigned long modPow(unsigned long base, unsigned long exponent, unsigned long mod){
+	unsigned long long c = 1;
+	for (long long i = 0; i < exponent; ++i){
 		c = (c*base)%mod;
 	}
 	return c;
 }
 
-void generateRSA(){
-	m = 8;
-	p = 11;
-	//p = 1073741783;
-	q = 13;
-	//q = 1073741717;
+void generateRSAValues(){
+	m = 65539;
+	p = 65497;
+	q = 65437;
 	phi = (p-1)*(q-1);
 	n = p*q;
-	//e=99999999989;
-	//e = 65537;
-	e = 7;
-	
-	printf("m: %lld\n",m);
-	printf("p: %ld\n",p);
-	printf("q: %ld\n",q);
-	printf("n: %lld\n",n);
-	printf("phi: %llu\n", phi);
-	printf("e: %ld\n",e);
+	e = 65537;
 	d = mul_inv(e, phi);
-	//d = 645922348764255065;
-	//d = 103;
-	printf("d: %lld\n",d);
-	long long C = modPow(m, e, n);
-	printf("C: %lld\n",C);
-	long long M = modPow(C, d, n);
-	printf("M: %lld\n",M);
+	
+	printf("m: %lu\n",m);
+	printf("p: %i\n",p);
+	printf("q: %i\n",q);
+	printf("n: %lu\n",n);
+	printf("phi: %lu\n", phi);
+	printf("e: %ld\n",e);
+	printf("e length: %i\n",elength);
+	printf("d: %ld\n",d);
+	printf("d length: %i\n",dlength);
 	return;
 }
 
@@ -78,8 +90,31 @@ long encrypt(char* message){
 }
 
 int main(){
-    generateRSA();
-    //long C = encrypt("message");
-	//printf("%lld\n", C);
+	clock_t begin, end;
+	generateRSAValues();
+	printf("\n** Results **\n");
+	
+	//**************** SIMPLE ****************
+	begin = clock();
+    C = modPow(m, e, n);
+    M = modPow(C, d, n);
+    end = clock();
+
+    printf("\nC: %lu\n",C);
+    printf("M: %lu\n",M);
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Simple: %f sec\n", time_spent);
+
+    //**************** BINARY ****************
+    begin = clock();
+	C = binaryMethod(m, ebin, elength, n);
+	M = binaryMethod(C, dbin, dlength, n);
+	end = clock();
+	
+	printf("\nC: %lu\n",C);
+    printf("M: %lu\n",M);
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Binary: %f sec\n", time_spent);
+    
     return 0;
 }
