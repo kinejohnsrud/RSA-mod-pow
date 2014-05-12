@@ -39,6 +39,18 @@ long gcd(long long a, long long b){
   return gcd (b%a, a);
 }
 
+unsigned long recodingBinaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
+	unsigned long inverse = mul_inv(base, n);
+	printf("%lu\n", base);
+	printf("%lu\n", inverse);
+	//unsigned long long c = (binary[0]==1) ? base : 1;
+	//for (int i = 1; i < length; ++i){
+	//	c = (c*c) % mod;
+	//	if(binary[i]==1) c = (c*base)%mod;
+	//}
+	return 0;
+}
+
 unsigned long binaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
 	unsigned long long c = (binary[0]==1) ? base : 1;
 	for (int i = 1; i < length; ++i){
@@ -97,7 +109,7 @@ int main(){
 	//**************** SIMPLE ****************
 	begin = clock();
     C = modPow(m, e, n);
-    M = modPow(C, d, n);
+    //M = modPow(C, d, n);
     end = clock();
 
     printf("\nC: %lu\n",C);
@@ -113,6 +125,17 @@ int main(){
 	
 	printf("\nC: %lu\n",C);
     printf("M: %lu\n",M);
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Binary: %f sec\n", time_spent);
+
+    //************ RECODING BINARY ************
+    begin = clock();
+	C = recodingBinaryMethod(m, ebin, elength, n);
+	//M = binaryMethod(C, dbin, dlength, n);
+	end = clock();
+	
+	printf("\nC: %lu\n",C);
+    //printf("M: %lu\n",M);
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Binary: %f sec\n", time_spent);
     
