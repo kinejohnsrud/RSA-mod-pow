@@ -39,16 +39,36 @@ long gcd(long long a, long long b){
   return gcd (b%a, a);
 }
 
+void signedConv(int binary[], int signedBinary[], int length){
+	int firstOne = 1;
+	signedBinary[0] = 1;
+	for (int i = length-1; i >= 0; --i){
+		if (binary[i] == 1){
+			if (firstOne == 1){
+				signedBinary[i+1] = -1;
+				firstOne = 0;
+			}
+			else signedBinary[i+1] = 0;
+		}
+		if (binary[i] == 0){
+			if (firstOne == 1) signedBinary[i+1] = 0;
+			else signedBinary[i+1] = -1;
+		}
+	}
+}
+
 unsigned long recodingBinaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
-	unsigned long inverse = mul_inv(base, n);
-	printf("%lu\n", base);
-	printf("%lu\n", inverse);
-	//unsigned long long c = (binary[0]==1) ? base : 1;
-	//for (int i = 1; i < length; ++i){
-	//	c = (c*c) % mod;
-	//	if(binary[i]==1) c = (c*base)%mod;
-	//}
-	return 0;
+	unsigned long baseInverse = mul_inv(base, n);
+	int signedLength = length+1;
+	int signedBinary[signedLength];
+	signedConv(binary, signedBinary, length);
+	unsigned long long c = (signedBinary[0]==1) ? base : 1;
+	for (int i = 1; i < signedLength; ++i){
+		c = (c*c) % mod;
+		if(signedBinary[i]==1) c = (c*base)%mod;
+		else if(signedBinary[i]==-1) c = (c*baseInverse)%mod;
+	}
+	return c;
 }
 
 unsigned long binaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
@@ -131,13 +151,13 @@ int main(){
     //************ RECODING BINARY ************
     begin = clock();
 	C = recodingBinaryMethod(m, ebin, elength, n);
-	//M = binaryMethod(C, dbin, dlength, n);
+	M = recodingBinaryMethod(C, dbin, dlength, n);
 	end = clock();
 	
 	printf("\nC: %lu\n",C);
-    //printf("M: %lu\n",M);
+    printf("M: %lu\n",M);
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("Binary: %f sec\n", time_spent);
+    printf("Recoding Binary: %f sec\n", time_spent);
     
     return 0;
 }
