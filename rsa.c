@@ -10,8 +10,8 @@ unsigned int p;
 unsigned int q;
 unsigned long phi;
 unsigned long n;
+unsigned long d;
 long e;
-long d;
 long m;
 
 // Need to fix these...
@@ -140,7 +140,8 @@ int main(){
     //**************** BINARY ****************
     begin = clock();
 	C = binaryMethod(m, ebin, elength, n);
-	M = binaryMethod(C, dbin, dlength, n);
+	//M = binaryMethod(C, dbin, dlength, n);
+	M = 0;
 	end = clock();
 	
 	printf("\nC: %lu\n",C);
