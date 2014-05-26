@@ -128,8 +128,10 @@ int main(){
 	
 	//**************** SIMPLE ****************
 	begin = clock();
-    C = modPow(m, e, n);
-    M = modPow(C, d, n);
+	for (int i = 0; i < 1000; ++i){
+    	C = modPow(m, e, n);
+    	M = modPow(C, d, n);
+    }
     end = clock();
 
     printf("\nC: %lu\n",C);
@@ -139,8 +141,10 @@ int main(){
 
     //**************** BINARY ****************
     begin = clock();
-	C = binaryMethod(m, ebin, elength, n);
-	M = binaryMethod(C, dbin, dlength, n);
+    for (int i = 0; i < 1000; ++i){
+    	C = binaryMethod(m, ebin, elength, n);
+		M = binaryMethod(C, dbin, dlength, n);
+    }
 	end = clock();
 	
 	printf("\nC: %lu\n",C);
@@ -150,8 +154,10 @@ int main(){
 
     //************ RECODING BINARY ************
     begin = clock();
-	C = recodingBinaryMethod(m, ebin, elength, n);
-	M = recodingBinaryMethod(C, dbin, dlength, n);
+    for (int i = 0; i < 1000; ++i){
+		C = recodingBinaryMethod(m, ebin, elength, n);
+		M = recodingBinaryMethod(C, dbin, dlength, n);
+	}
 	end = clock();
 	
 	printf("\nC: %lu\n",C);
