@@ -22,8 +22,8 @@ int dlength = sizeof(dbin)/sizeof(dbin[0]);
 
 
 long long mul_inv(long long a, long long b){
-	long long b0 = b, t, q;
-	long long x0 = 0, x1 = 1;
+	unsigned long long b0 = b, t, q;
+	unsigned long long x0 = 0, x1 = 1;
 	if (b == 1) return 1;
 	while (a > 1) {
 		q = a / b;
