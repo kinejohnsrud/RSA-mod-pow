@@ -15,9 +15,9 @@ long e;
 long m;
 
 // Need to fix these...
-int ebin[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+int ebin[] = {1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1};
 int elength = sizeof(ebin)/sizeof(ebin[0]);
-int dbin[] = {1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1};
+int dbin[] = {1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1};
 int dlength = sizeof(dbin)/sizeof(dbin[0]);
 
 
@@ -89,12 +89,12 @@ unsigned long modPow(unsigned long base, unsigned long exponent, unsigned long m
 }
 
 void generateRSAValues(){
-	m = 65539;
-	p = 65497;
-	q = 65437;
+	m = 1234;
+	p = 233;
+	q = 223;
 	phi = (p-1)*(q-1);
 	n = p*q;
-	e = 65537;
+	e = 50555;
 	d = mul_inv(e, phi);
 	
 	printf("m: %lu\n",m);
@@ -141,7 +141,6 @@ int main(){
     begin = clock();
 	C = binaryMethod(m, ebin, elength, n);
 	M = binaryMethod(C, dbin, dlength, n);
-	M = 0;
 	end = clock();
 	
 	printf("\nC: %lu\n",C);
