@@ -22,8 +22,8 @@ int dlength = sizeof(dbin)/sizeof(dbin[0]);
 
 
 long long mul_inv(long long a, long long b){
-	unsigned long long b0 = b, t, q;
-	unsigned long long x0 = 0, x1 = 1;
+	long long b0 = b, t, q;
+	long long x0 = 0, x1 = 1;
 	if (b == 1) return 1;
 	while (a > 1) {
 		q = a / b;
@@ -129,7 +129,7 @@ int main(){
 	//**************** SIMPLE ****************
 	begin = clock();
     C = modPow(m, e, n);
-    //M = modPow(C, d, n);
+    M = modPow(C, d, n);
     end = clock();
 
     printf("\nC: %lu\n",C);
@@ -140,7 +140,7 @@ int main(){
     //**************** BINARY ****************
     begin = clock();
 	C = binaryMethod(m, ebin, elength, n);
-	//M = binaryMethod(C, dbin, dlength, n);
+	M = binaryMethod(C, dbin, dlength, n);
 	M = 0;
 	end = clock();
 	
