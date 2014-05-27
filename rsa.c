@@ -58,25 +58,28 @@ void signedConv(int binary[], int signedBinary[], int length){
 	}
 }
 
-unsigned long monPro(unsigned int abar, unsigned int bbar, unsigned int modprime, unsigned int r){
+unsigned long monPro(unsigned int abar, unsigned int bbar, unsigned int mod, unsigned int modprime){
 	unsigned long t = abar * bbar;
 	unsigned long m = (t * modprime) % r;
-	unsigned long u = (t + m * n) / r;
-	if (u>=n) return u-n;
+	unsigned long u = (t + m * mod) / r;
+	if (u>=mod) return u-mod;
 	return u;
 }
 
 
-unsigned long montgomeryExp(unsigned long base, int binary[], int length, unsigned int mod, unsigned int r){
-	unsigned int rinv = mul_inv(r, n);
-	unsigned int modprime = (r*rinv-1)/n;
-	unsigned int basebar = (base * r) % n;
-	unsigned int xbar = (1*r) % n;
-	for (int i = 1; i < length; ++i){
-		xbar = monPro(xbar, xbar, modprime, r);
-		if(binary[i]==1) xbar = monPro(basebar, xbar, modprime, r);
+unsigned long montgomeryExp(unsigned long base, int binary[], int length, unsigned int mod){
+	unsigned int rinv = mul_inv(r, mod);
+	unsigned int modprime = (r*rinv-1)/mod;
+	unsigned int basebar = (base * r) % mod;
+
+	unsigned int xbar = (1*r) % mod;
+	for (int i = 0; i < length; ++i){
+		xbar = monPro(xbar, xbar, mod, modprime);
+		if(binary[i]==1){
+			xbar = monPro(basebar, xbar, mod, modprime);
+		}
 	}
-	unsigned int x = monPro(x, 1, modprime, r);
+	unsigned int x = monPro(xbar, 1, mod, modprime);
 	return x;
 }
 
@@ -191,10 +194,11 @@ int main(){
     
     //************ Montgomery ************
     r = 65536;
+    //r = 16;
     begin = clock();
     for (int i = 0; i < 1000; ++i){
-		C = montgomeryExp(m, ebin, elength, n, r);
-		M = montgomeryExp(C, dbin, dlength, n, r);
+		C = montgomeryExp(m, ebin, elength, n);
+		M = montgomeryExp(C, dbin, dlength, n);
 	}
 	end = clock();
 	
