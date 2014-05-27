@@ -4,15 +4,16 @@
 #include <time.h>
 
 double time_spent;
-unsigned long C;
-unsigned long M;
+unsigned int C;
+unsigned int M;
 unsigned int p;
 unsigned int q;
-unsigned long phi;
-unsigned long n;
-unsigned long d;
-long e;
-long m;
+unsigned int phi;
+unsigned int n;
+unsigned int d;
+unsigned int e;
+unsigned int m;
+unsigned int r;
 
 // Need to fix these...
 int ebin[] = {1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1};
@@ -21,7 +22,7 @@ int dbin[] = {1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1};
 int dlength = sizeof(dbin)/sizeof(dbin[0]);
 
 
-long long mul_inv(long long a, long long b){
+unsigned long mul_inv(unsigned long a, unsigned long b){
 	long long b0 = b, t, q;
 	long long x0 = 0, x1 = 1;
 	if (b == 1) return 1;
@@ -34,7 +35,7 @@ long long mul_inv(long long a, long long b){
 	return x1;
 }
 
-long gcd(long long a, long long b){
+long gcd(unsigned long a, long long b){
   if (a == 0) return b;
   return gcd (b%a, a);
 }
@@ -57,12 +58,35 @@ void signedConv(int binary[], int signedBinary[], int length){
 	}
 }
 
-unsigned long recodingBinaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
-	unsigned long baseInverse = mul_inv(base, n);
+unsigned long monPro(unsigned int abar, unsigned int bbar, unsigned int modprime, unsigned int r){
+	unsigned long t = abar * bbar;
+	unsigned long m = (t * modprime) % r;
+	unsigned long u = (t + m * n) / r;
+	if (u>=n) return u-n;
+	return u;
+}
+
+
+unsigned long montgomeryExp(unsigned long base, int binary[], int length, unsigned int mod, unsigned int r){
+	unsigned int rinv = mul_inv(r, n);
+	unsigned int modprime = (r*rinv-1)/n;
+	unsigned int basebar = (base * r) % n;
+	unsigned int xbar = (1*r) % n;
+	for (int i = 1; i < length; ++i){
+		xbar = monPro(xbar, xbar, modprime, r);
+		if(binary[i]==1) xbar = monPro(basebar, xbar, modprime, r);
+	}
+	unsigned int x = monPro(x, 1, modprime, r);
+	return x;
+}
+
+
+unsigned long recodingBinaryMethod(unsigned int base, int binary[], int length, unsigned int mod){
+	unsigned int baseInverse = mul_inv(base, n);
 	int signedLength = length+1;
 	int signedBinary[signedLength];
 	signedConv(binary, signedBinary, length);
-	unsigned long long c = (signedBinary[0]==1) ? base : 1;
+	unsigned long c = (signedBinary[0]==1) ? base : 1;
 	for (int i = 1; i < signedLength; ++i){
 		c = (c*c) % mod;
 		if(signedBinary[i]==1) c = (c*base)%mod;
@@ -71,8 +95,8 @@ unsigned long recodingBinaryMethod(unsigned long base, int binary[], int length,
 	return c;
 }
 
-unsigned long binaryMethod(unsigned long base, int binary[], int length, unsigned long mod){
-	unsigned long long c = (binary[0]==1) ? base : 1;
+unsigned long binaryMethod(unsigned int base, int binary[], int length, unsigned int mod){
+	unsigned long c = (binary[0]==1) ? base : 1;
 	for (int i = 1; i < length; ++i){
 		c = (c*c) % mod;
 		if(binary[i]==1) c = (c*base)%mod;
@@ -80,8 +104,8 @@ unsigned long binaryMethod(unsigned long base, int binary[], int length, unsigne
 	return c;
 }
 
-unsigned long modPow(unsigned long base, unsigned long exponent, unsigned long mod){
-	unsigned long long c = 1;
+unsigned long modPow(unsigned int base, unsigned int exponent, unsigned int mod){
+	unsigned long c = 1;
 	for (long long i = 0; i < exponent; ++i){
 		c = (c*base)%mod;
 	}
@@ -97,14 +121,14 @@ void generateRSAValues(){
 	e = 50555;
 	d = mul_inv(e, phi);
 	
-	printf("m: %lu\n",m);
+	printf("m: %u\n",m);
 	printf("p: %i\n",p);
 	printf("q: %i\n",q);
-	printf("n: %lu\n",n);
-	printf("phi: %lu\n", phi);
-	printf("e: %ld\n",e);
+	printf("n: %u\n",n);
+	printf("phi: %u\n", phi);
+	printf("e: %u\n",e);
 	printf("e length: %i\n",elength);
-	printf("d: %ld\n",d);
+	printf("d: %u\n",d);
 	printf("d length: %i\n",dlength);
 	return;
 }
@@ -134,8 +158,8 @@ int main(){
     }
     end = clock();
 
-    printf("\nC: %lu\n",C);
-    printf("M: %lu\n",M);
+    printf("\nC: %u\n",C);
+    printf("M: %u\n",M);
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Simple: %f sec\n", time_spent);
 
@@ -147,8 +171,8 @@ int main(){
     }
 	end = clock();
 	
-	printf("\nC: %lu\n",C);
-    printf("M: %lu\n",M);
+	printf("\nC: %u\n",C);
+    printf("M: %u\n",M);
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Binary: %f sec\n", time_spent);
 
@@ -160,10 +184,24 @@ int main(){
 	}
 	end = clock();
 	
-	printf("\nC: %lu\n",C);
-    printf("M: %lu\n",M);
+	printf("\nC: %u\n",C);
+    printf("M: %u\n",M);
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Recoding Binary: %f sec\n", time_spent);
     
+    //************ Montgomery ************
+    r = 65536;
+    begin = clock();
+    for (int i = 0; i < 1000; ++i){
+		C = montgomeryExp(m, ebin, elength, n, r);
+		M = montgomeryExp(C, dbin, dlength, n, r);
+	}
+	end = clock();
+	
+	printf("\nC: %u\n",C);
+    printf("M: %u\n",M);
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("Montgomery: %f sec\n", time_spent);
+
     return 0;
 }
