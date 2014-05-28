@@ -62,13 +62,6 @@ unsigned long monPro(unsigned int abar, unsigned int bbar, unsigned int mod, uns
 	unsigned long t = abar * bbar;
 	unsigned long m = (t * modprime) % r;
 	unsigned long u = (t + m * mod) / r;
-	printf("abar: %u\n", abar);
-	printf("bbar: %u\n", bbar);
-	printf("modprime: %u\n", modprime);
-	printf("r: %u\n", r);
-	printf("t: %lu\n", t);
-	printf("m: %lu\n", m);
-	printf("u: %lu\n", u);
 	if (u>=mod) return u-mod;
 	return u;
 }
@@ -78,8 +71,6 @@ unsigned long montgomeryExp(unsigned long base, int binary[], int length, unsign
 	unsigned int rinv = mul_inv(r, mod);
 	unsigned int modprime = (r*rinv-1)/mod;
 	unsigned int basebar = (base * r) % mod;
-	printf("rinv: %u\n", rinv);
-	printf("modprime: %u\n", modprime);
 
 	unsigned int xbar = (1*r) % mod;
 	for (int i = 0; i < length; ++i){
@@ -207,7 +198,7 @@ int main(){
     //r = 13577;
     //r = 16;
     begin = clock();
-    for (int i = 0; i < 1; ++i){
+    for (int i = 0; i < 1000; ++i){
 		C = montgomeryExp(m, ebin, elength, n);
 		M = montgomeryExp(C, dbin, dlength, n);
 	}
