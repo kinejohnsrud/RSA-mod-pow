@@ -207,7 +207,7 @@ int main(){
     //r = 13577;
     //r = 16;
     begin = clock();
-    for (int i = 0; i < 1000; ++i){
+    for (int i = 0; i < 1; ++i){
 		C = montgomeryExp(m, ebin, elength, n);
 		M = montgomeryExp(C, dbin, dlength, n);
 	}
