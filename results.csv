@@ -1,0 +1,4 @@
+processor, simple, binary, recoding binary, montgomery
+Intel i5 Dual Core 2.3GHz, 1.108954, 0.000646, 0.001254, 0.002524
+Freescale i.MX 6 Cortex-A9 Dual Core 1GHz, 8.040000, 0.010000, 0.010000, none
+Atmel SAM3X8E ARM Cortex-M3 CPU, none, none, none, none
