@@ -193,7 +193,9 @@ int main(){
     printf("Recoding Binary: %f sec\n", time_spent);
     
     //************ Montgomery ************
-    r = 65536;
+    r = 65443;
+    //r = 41957;
+    //r = 13577;
     //r = 16;
     begin = clock();
     for (int i = 0; i < 1000; ++i){
