@@ -26,12 +26,13 @@ void setup() {
 
 void loop() {
   unsigned long C = binaryMethod(m, ebin, elength, n);
-  digitalWrite(led, HIGH);
+  
   
   generateRSAValues();
   Serial.println("** Results **\n");
 	
   //**************** SIMPLE ****************
+  digitalWrite(led, HIGH);
   time_begin = millis();
   for (int i = 0; i < 1000; ++i){
     C = modPow(m, e, n);
@@ -46,8 +47,10 @@ void loop() {
   time_spent = time_end - time_begin;
   Serial.print("Simple: ");
   Serial.println(time_spent);
-
+  digitalWrite(led, LOW); 
+  delay(500);
   //**************** BINARY ****************
+  digitalWrite(led, HIGH);
   time_begin = millis();
   for (int i = 0; i < 1000; ++i){
     C = binaryMethod(m, ebin, elength, n);
@@ -62,8 +65,10 @@ void loop() {
   time_spent = time_end - time_begin;
   Serial.print("Binary: ");
   Serial.println(time_spent);
-
+  digitalWrite(led, LOW); 
+  delay(500);
   //************ RECODING BINARY ************
+  digitalWrite(led, HIGH);
   time_begin = millis();
   for (int i = 0; i < 1000; ++i){
     C = recodingBinaryMethod(m, ebin, elength, n);
@@ -78,8 +83,11 @@ void loop() {
   time_spent = time_end - time_begin;
   Serial.print("Recoding Binary: ");
   Serial.println(time_spent);
+  digitalWrite(led, LOW); 
+  delay(500);
   
   //************ Montgomery ************
+  digitalWrite(led, HIGH);
   r = 65443;
   //r = 41957;
   //r = 13577;
@@ -99,7 +107,8 @@ void loop() {
   Serial.print("Montgomery: ");
   Serial.println(time_spent);
 
-  digitalWrite(led, LOW);  
+  digitalWrite(led, LOW); 
+  delay(500); 
 }
 
 void generateRSAValues(){
