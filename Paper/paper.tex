@@ -21,7 +21,7 @@ E-mail: \texttt{\{christiandt,kinej\}@umail.ucsb.edu}}
 \maketitle
 
 \begin{abstract}
-RSA is one of the first practicable public-key cryptosystems, and is widely used for secure data transmission. In this paper we present four different algorithms for calculating the modular exponentiation, and measure their impact on overall speed performance of RSA on different types of processors.
+RSA is one of the first practicable public-key cryptosystems, and is widely used for secure data transmission. In this paper we present three different algorithms for calculating the modular exponentiation, and measure their impact on overall speed performance of RSA on different types of processors.
 \end{abstract}
 
 \section{Introduction}
@@ -36,13 +36,10 @@ RSA is an asymmetric key scheme where the encryption key is public, and the decr
 
 where n = pq, and p and q are two large primes. For more information about the mathematics of RSA, refer to Rivest et al.~\cite{rsa}. RSA can be used to encrypt and exchange private messages, as long as the message is smaller than the size of the key. RSA is more often used as a way to sign and verify digital documents. 
 
-In this paper, we will discuss four ways to implement RSA. We will first implement a naive and simple method, to conceptually show how bad an algorithm can be if written badly. Then we implement three fast and viable methods, called the binary method, recoding binary method, and montgomery exponentiation method. We have chosen to run the algorithms on three different processor architectures, to show the importance of efficiency when the hardware speeds are lower. The three processors are an Intel i7 in a Macbook Air, the processor of the UDOO development board, and the processor of the arduino-part of the UDOO development board.
+In this paper, we will discuss three ways to implement RSA. We will implement three fast and viable methods, called the binary method, recoding binary method, and montgomery exponentiation method. We have chosen to run the algorithms on three different processor architectures, to show the importance of efficiency when the hardware speeds are lower. The three processors are an Intel i7 in a Macbook Air, the processor of the UDOO development board, and the processor of the arduino-part of the UDOO development board.
 
 \section{Description}
-In this section we will discuss the various algorithms we chose to implement, and their main improvement features. We have implemented a standard naive method, binary method, recoding binary method, and montgomery exponentiation.
-
-\subsection*{The Naive Method}
-To show how important the efficiency of the algorithm is, we chose to implement a basic, naive version of RSA as our baseline algorithm. In this algorithm, you start with calculating $C := M \pmod{n}$, and perform $C := C \cdot M \pmod{n}$, $e-1$ times. This requires e-1 multiplications, and is not in any way an efficient way to implement RSA. We therefore continued with an implementation of the binary method.
+In this section we will discuss the various algorithms we chose to implement, and their main improvement features. We have implemented the binary method, recoding binary method, and montgomery exponentiation.
 
 \subsection*{Binary Method}
 In the binary method, we represent the exponents $e$ and $d$ in binary, and scan them from left to right. We call the number of bits $k$. For each bit, we perform a squaring, and if the bit is a 1, we also perform a subsequent multiplication. This gives an order of magnitude fewer operations than the naive method, as the maximum number of multiplications is $2(k-1)$.
@@ -73,11 +70,11 @@ All code is implemented using the C programming language.  We wanted to use a "l
 As earlier stated, performance-testing is performed using three different processors. One high-end Intel processor, a middle-performing ARM processor, and a low-end microcontroller. Testing of the Intel processor is done on a 2013 Apple MacBook Air using the OSX operating system. This is a dual-core 2.0GHz, 64 bit processor, and represents the high-end in our testing. The middle-end processor is a Freescale i.MX 6 Cortex-A9 Dual Core 1GHz and is tested using the Ubuntu Linux distribution on a UDOO computer. Finally, the low-end processor is a Atmel SAM3X8E ARM Cortex-M3 CPU also on the UDOO board, but run separately from the rest of the board.
 
 \section{Results}
-This section shows the numerical results after running the four different RSA algorithms on three different processor architectures. A set of fixed values are used for p, q, M and e, and all the results are averaged over three measurements. Due to the low number values, all algorithms run both encryption and decryption 1000 times each to get a more accurate number. The montgomery algorithm is not run on the UDOO and the arduino, as the 32-bit limitation would require the numbers to be half the bit-size of the values used for the rest of the measurements. All numbers in the result are per 1000 encryptions and decryptions.
+This section shows the numerical results after running the three different RSA algorithms on three different processor architectures. A set of fixed values are used for p, q, M and e, and all the results are averaged over three measurements. Due to the low number values, all algorithms run both encryption and decryption 1000 times each to get a more accurate number. The montgomery algorithm is not run on the UDOO and the arduino, as the 32-bit limitation would require the numbers to be half the bit-size of the values used for the rest of the measurements. All numbers in the result are per 1000 encryptions and decryptions.
 
-From Table~1 we can quickly see that the naive version of modular exponentiation is not especially useful for any of the tested processors, and that the binary and recoding binary perform approximately $10^3$ times better. This was as expected, and the naive method should not be used in real life cryptography.
 
-Further, we can see that the binary method performs between 33 \% and 63 \% better than the recoding binary method. This can be explained by the nature of the algorithms. Unless the exponents contains large blocks of 1’s, the use of recoding will be of little value, and the overhead needed to calculate the inverse modulo will hurt the performance.
+
+From Table~1 we can see that the binary method performs between 33 \% and 63 \% better than the recoding binary method. This can be explained by the nature of the algorithms. Unless the exponents contains large blocks of 1’s, the use of recoding will be of little value, and the overhead needed to calculate the inverse modulo will hurt the performance.
 
 Another noticeable result, is that on the i7 processor, the binary method is approximately 4 times faster than the montgomery method, and the recoding binary method is approximately 2 times faster. This leads back to the problem discussed in the section about montgomery, where the amount of overhead overshadows the effects of faster exponentiation, and thus makes this algorithm slower, at least with small, conceptual numbers like in this experiment.
 
