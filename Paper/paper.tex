@@ -53,12 +53,12 @@ Last but not least, we implemented the Montgomery Exponentiation method, that al
 \begin{table*}[!htb] 
 \textbf{Table 1:} Time in seconds of 1000 encryptions and decryptions in RSA \\[1em]
     \centering
-    \begin{tabular}{|l|l|l|l|l|}
+    \begin{tabular}{|l|l|l|l|}
     \hline
-    {\bf Processor}                                 & {\bf Naive}     & {\bf Binary}   & {\bf Recoding Binary} & {\bf Montgomery} \\ \hline
-    Intel i7 Dual Core 2.0GHz                 & 0.989065  & 0.000592 & 0.001119        & 0.002410   \\ \hline
-    Freescale i.MX 6 Cortex-A9 Dual Core 1GHz & 8.040000  & 0.005600 & 0.008667        & N/A       \\ \hline
-    Atmel SAM3X8E ARM Cortex-M3 CPU           & 22.809000 & 0.012333 & 0.036667        & N/A       \\ \hline
+    {\bf Processor}                                 & {\bf Binary}   & {\bf Recoding Binary} & {\bf Montgomery} \\ \hline
+    Intel i7 Dual Core 2.0GHz                 & 0.000592 & 0.001119        & 0.002410   \\ \hline
+    Freescale i.MX 6 Cortex-A9 Dual Core 1GHz & 0.005600 & 0.008667        & N/A       \\ \hline
+    Atmel SAM3X8E ARM Cortex-M3 CPU           & 0.012333 & 0.036667        & N/A       \\ \hline
     \end{tabular}
 \end{table*}
 
