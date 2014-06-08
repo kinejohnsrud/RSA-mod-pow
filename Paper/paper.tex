@@ -51,14 +51,14 @@ If the binary representation of the exponent contains a lot of 1’s, the standa
 Last but not least, we implemented the Montgomery Exponentiation method, that also uses the Montgomery Product algorithm. This algorithm is best explained by Koc et al.~\cite{koc}, but the idea is that this is a reduction algorithm that performs multiplication faster than the conventional way. This algorithm is proven faster than the ones we have previously discussed, but the amount of overhead (pre-calculations) needed makes the effect of the efficient core algorithm hard to detect on our small-numbered set of values.
 
 \begin{table*}[!htb] 
-\textbf{Table 1:} Time in seconds of 1000 encryptions and decryptions in RSA \\[1em]
+\textbf{Table 1:} Time in milliseconds of 1000 encryptions and decryptions in RSA \\[1em]
     \centering
     \begin{tabular}{|l|l|l|l|}
     \hline
     {\bf Processor}                                 & {\bf Binary}   & {\bf Recoding Binary} & {\bf Montgomery} \\ \hline
-    Intel i7 Dual Core 2.0GHz                 & 0.000592 & 0.001119        & 0.002410   \\ \hline
-    Freescale i.MX 6 Cortex-A9 Dual Core 1GHz & 0.005600 & 0.008667        & N/A       \\ \hline
-    Atmel SAM3X8E ARM Cortex-M3 CPU           & 0.012333 & 0.036667        & N/A       \\ \hline
+    Intel i7 Dual Core 2.0GHz                 & 0.592 & 1.119        & 2.410   \\ \hline
+    Freescale i.MX 6 Cortex-A9 Dual Core 1GHz & 5.600 & 8.667        & N/A       \\ \hline
+    Atmel SAM3X8E ARM Cortex-M3 CPU           & 12.333 & 36.667        & N/A       \\ \hline
     \end{tabular}
 \end{table*}
 
@@ -77,6 +77,9 @@ This section shows the numerical results after running the three different RSA a
 From Table~1 we can see that the binary method performs between 33 \% and 63 \% better than the recoding binary method. This can be explained by the nature of the algorithms. Unless the exponents contains large blocks of 1’s, the use of recoding will be of little value, and the overhead needed to calculate the inverse modulo will hurt the performance.
 
 Another noticeable result, is that on the i7 processor, the binary method is approximately 4 times faster than the montgomery method, and the recoding binary method is approximately 2 times faster. This leads back to the problem discussed in the section about montgomery, where the amount of overhead overshadows the effects of faster exponentiation, and thus makes this algorithm slower, at least with small, conceptual numbers like in this experiment.
+
+\section{Discussion}
+Text
 
 \section{Conclusion}
 As can be seen from the results table, we did not get the same results as a mathematical simulation with a 2048-bit key would give. The main purpose of this project was to learn RSA on a deeper level, and to understand how such algorithms are implemented in software to make them sufficiently fast.  We have managed to implement four versions of the RSA modular exponentiation in C on three different processor platforms, and have understood how using the various algorithms impacts overall speed. The process has been both fun and educational.
